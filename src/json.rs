@@ -12,8 +12,8 @@ use crate::traits::Serialize;
 #[cfg_attr(feature = "std", derive(Debug))]
 #[derive(Clone, PartialEq, Copy)]
 pub struct NumberValue {
-    pub integer: u64,
-    pub fraction: u64,
+    pub integer: u128,
+    pub fraction: u128,
     pub fraction_length: u32,
     pub exponent: i32,
     pub negative: bool,

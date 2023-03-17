@@ -42,44 +42,44 @@ pub type Sign = ZeroOrOne<SignChar>;
 pub type Digits = OneOrMore<DigitChar>;
 
 parsers! {
-    pub PositiveInteger = OneOf<Concat<OneToNineChar, Digits>, DigitChar>, u64, (output) => {
+    pub PositiveInteger = OneOf<Concat<OneToNineChar, Digits>, DigitChar>, u128, (output) => {
         match output {
             Either::A((c, cs)) => {
-                let mut val = c.to_digit(10).unwrap() as u64;
+                let mut val = c.to_digit(10).unwrap() as u128;
                 for c in cs {
                     val *= 10;
-                    val += c.to_digit(10).unwrap() as u64;
+                    val += c.to_digit(10).unwrap() as u128;
                 }
                 val
             },
-            Either::B(c) => c.to_digit(10).unwrap() as u64,
+            Either::B(c) => c.to_digit(10).unwrap() as u128,
         }
     };
 
-    pub NegativeInteger = Concat<NegativeSignChar, PositiveInteger>, u64, (output) => {
+    pub NegativeInteger = Concat<NegativeSignChar, PositiveInteger>, u128, (output) => {
         let (_, output) = output;
         output
     };
 
-    pub Integer = OneOf<PositiveInteger, NegativeInteger>, (bool, u64), (output) => {
+    pub Integer = OneOf<PositiveInteger, NegativeInteger>, (bool, u128), (output) => {
         match output {
             Either::A(a) => (false, a),
             Either::B(b) => (true, b),
         }
     };
 
-    pub Fraction = ZeroOrOne<Concat<DotChar, Digits>>, (u64, u32), (output) => {
+    pub Fraction = ZeroOrOne<Concat<DotChar, Digits>>, (u128, u32), (output) => {
         match output {
             Either::A((_, cs)) => {
-                let mut val = 0u64;
+                let mut val = 0u128;
                 let len = cs.len();
                 for c in cs {
-                    val *= 10u64;
-                    val += c.to_digit(10).unwrap() as u64;
+                    val *= 10u128;
+                    val += c.to_digit(10).unwrap() as u128;
                 }
                 (val, len as u32)
             },
-            Either::B(_) => (0u64, 0u32),
+            Either::B(_) => (0u128, 0u32),
         }
     };
 
